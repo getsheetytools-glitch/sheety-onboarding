@@ -1,1 +1,517 @@
-test
+---
+layout: base.html
+title: Sheety Onboarding
+description: Structured employee onboarding, without the spreadsheet chaos. Built on Fillout — no code required.
+---
+
+<style>
+
+/* ─── Hero ───────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  padding: clamp(4.5rem, 11vw, 9rem) clamp(1.25rem, 5vw, 3rem) clamp(4rem, 9vw, 7rem);
+  text-align: center;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(46,201,126,0.10) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 30% at 80% 60%, rgba(224,122,58,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-h);
+  border-radius: 100px;
+  padding: 0.35rem 0.9rem 0.35rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  margin-bottom: 1.75rem;
+  letter-spacing: 0.01em;
+}
+.hero-eyebrow .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 6px var(--orange);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.7); }
+}
+.hero h1 {
+  font-family: var(--font-head);
+  font-size: clamp(2.4rem, 6.5vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.07;
+  letter-spacing: -0.03em;
+  max-width: 780px;
+  margin: 0 auto 1.35rem;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--green);
+}
+.hero-sub {
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  color: var(--ink-2);
+  max-width: 520px;
+  margin: 0 auto 2.75rem;
+  line-height: 1.65;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+.hero-note {
+  margin-top: 1.1rem;
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+
+/* ─── Trust bar ──────────────────────────────────────────── */
+.trust {
+  padding: 1.1rem clamp(1.25rem, 5vw, 3rem);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-2);
+}
+.trust-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  color: var(--ink-3);
+}
+.trust-item svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--green);
+  flex-shrink: 0;
+}
+
+/* ─── Problem section ────────────────────────────────────── */
+.problem {
+  background: var(--bg);
+}
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+.problem-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.65rem;
+}
+.problem-card .icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.problem-card h3 {
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.4rem;
+  color: var(--ink);
+}
+.problem-card p {
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+/* ─── How it works ───────────────────────────────────────── */
+.how {
+  background: var(--bg-2);
+}
+.how-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.75rem;
+  counter-reset: steps;
+}
+.step {
+  position: relative;
+  padding: 1.75rem 1.65rem 1.65rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  counter-increment: steps;
+}
+.step::before {
+  content: counter(steps);
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-family: var(--font-head);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--bg-card-h);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.step-icon {
+  font-size: 1.65rem;
+  margin-bottom: 1rem;
+}
+.step h3 {
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.5rem;
+  color: var(--ink);
+}
+.step p {
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  line-height: 1.65;
+}
+
+/* ─── Features ───────────────────────────────────────────── */
+.features {
+  background: var(--bg);
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.75rem;
+}
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.65rem 1.75rem;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+.feature-card:hover {
+  border-color: var(--border-h);
+  background: var(--bg-card-h);
+  transform: translateY(-2px);
+}
+.feature-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.85rem;
+}
+.feature-card h3 {
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.45rem;
+  color: var(--ink);
+}
+.feature-card p {
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+/* ─── Who it's for ───────────────────────────────────────── */
+.who {
+  background: var(--bg-2);
+}
+.who-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+.who-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.who-card .who-icon { font-size: 1.5rem; }
+.who-card h3 {
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.who-card p {
+  font-size: 0.825rem;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+/* ─── CTA section ────────────────────────────────────────── */
+.cta-section {
+  background: var(--bg);
+}
+.cta-box {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-h);
+  border-radius: var(--radius-lg);
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 5vw, 4rem);
+  text-align: center;
+  overflow: hidden;
+}
+.cta-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(46,201,126,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+.cta-box h2 {
+  font-family: var(--font-head);
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.85rem;
+}
+.cta-box p {
+  font-size: 1rem;
+  color: var(--ink-2);
+  max-width: 440px;
+  margin: 0 auto 2rem;
+  line-height: 1.65;
+}
+.cta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+.cta-note {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+
+/* ─── Responsive ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .hero-actions, .cta-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero-actions a, .cta-actions a {
+    justify-content: center;
+  }
+  .trust-inner { gap: 1rem 1.5rem; justify-content: flex-start; }
+  .how-steps, .features-grid, .problem-grid, .who-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="dot"></span>
+    Coming soon — join the waitlist
+  </div>
+  <h1>Onboarding that <em>actually</em><br>sets people up to succeed</h1>
+  <p class="hero-sub">Structured, consistent onboarding flows — built on Fillout, no code required. So every new hire gets the same great start.</p>
+  <div class="hero-actions">
+    <a href="{{ site.waitlistUrl }}" target="_blank" rel="noopener" class="btn-primary">{{ site.waitlistLabel }} →</a>
+    <a href="#how-it-works" class="btn-ghost">See how it works</a>
+  </div>
+  <p class="hero-note">No account needed to get started. Built by Sheety Tools.</p>
+</header>
+
+<!-- Trust bar -->
+<div class="trust">
+  <div class="trust-inner">
+    <div class="trust-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      No code required
+    </div>
+    <div class="trust-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      Built on Fillout
+    </div>
+    <div class="trust-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      Consistent for every hire
+    </div>
+    <div class="trust-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      Set up in under an hour
+    </div>
+  </div>
+</div>
+
+<!-- Problem -->
+<section class="problem">
+  <div class="section-inner">
+    <p class="section-label fade-up">The problem</p>
+    <h2 class="section-title fade-up">Onboarding is broken for small teams</h2>
+    <p class="section-sub fade-up">Most teams wing it. A Slack message here, a Google Doc there — and every new hire gets a different experience.</p>
+    <div class="problem-grid">
+      <div class="problem-card fade-up">
+        <div class="icon">📋</div>
+        <h3>Checklists scattered everywhere</h3>
+        <p>Docs, sheets, emails — nobody knows which is current, and nothing actually gets done.</p>
+      </div>
+      <div class="problem-card fade-up">
+        <div class="icon">🔁</div>
+        <h3>Starting from scratch every time</h3>
+        <p>Every new hire triggers the same scramble. There's no repeatable process to build on.</p>
+      </div>
+      <div class="problem-card fade-up">
+        <div class="icon">😶</div>
+        <h3>New hires left in the dark</h3>
+        <p>Without a clear path, people spend their first week figuring out who to ask — instead of doing great work.</p>
+      </div>
+      <div class="problem-card fade-up">
+        <div class="icon">🤷</div>
+        <h3>Managers guessing at what's done</h3>
+        <p>No visibility into progress means following up manually, or just hoping it all got covered.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="how" id="how-it-works">
+  <div class="section-inner">
+    <p class="section-label fade-up">How it works</p>
+    <h2 class="section-title fade-up">Structured onboarding in four steps</h2>
+    <p class="section-sub fade-up">Sheety Onboarding gives you a ready-to-use flow — customise it to your team and you're done.</p>
+    <div class="how-steps">
+      <div class="step fade-up">
+        <div class="step-icon">⚙️</div>
+        <h3>Set up your flow</h3>
+        <p>Start from a proven template or build your own. Customise tasks, timing, and who's responsible.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-icon">👤</div>
+        <h3>Add your new hire</h3>
+        <p>Enter their details and Sheety Onboarding generates their personal onboarding experience.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-icon">📬</div>
+        <h3>They get a clear path</h3>
+        <p>Your new hire receives everything they need — step by step, in the right order, at the right time.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-icon">✅</div>
+        <h3>You see what's done</h3>
+        <p>Track progress without chasing. Know exactly where each person is in their first weeks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features">
+  <div class="section-inner">
+    <p class="section-label fade-up">Features</p>
+    <h2 class="section-title fade-up">Everything a small team actually needs</h2>
+    <p class="section-sub fade-up">No bloat. No enterprise features you'll never use. Just the right tools to get people started well.</p>
+    <div class="features-grid">
+      <div class="feature-card fade-up">
+        <div class="feature-icon">📝</div>
+        <h3>Fillout-powered forms</h3>
+        <p>Built on Fillout — no code, no backend, no maintenance. Just a form that works.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">🗂️</div>
+        <h3>Reusable templates</h3>
+        <p>Build your onboarding flow once. Reuse it every time — with per-hire customisation where you need it.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">📊</div>
+        <h3>Progress tracking</h3>
+        <p>See exactly what's been completed, what's pending, and who might need a nudge.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">🔔</div>
+        <h3>Automatic reminders</h3>
+        <p>Tasks go out at the right time without you lifting a finger. Managers get notified when things are done.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">🧩</div>
+        <h3>Fits your existing tools</h3>
+        <p>Works alongside the docs, drives, and Slacks your team already uses. No migration required.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">🤖</div>
+        <h3>Built with AI, owned by you</h3>
+        <p>AI-assisted development means fast iteration. You get the product — with full transparency about how it's built.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Who it's for -->
+<section class="who">
+  <div class="section-inner">
+    <p class="section-label fade-up">Who it's for</p>
+    <h2 class="section-title fade-up">Made for teams that are growing</h2>
+    <p class="section-sub fade-up">If you're hiring more than a couple of people a year and onboarding still lives in your head — this is for you.</p>
+    <div class="who-grid">
+      <div class="who-card fade-up">
+        <span class="who-icon">🏢</span>
+        <h3>Small businesses</h3>
+        <p>First real onboarding process, without hiring an HR team to build it.</p>
+      </div>
+      <div class="who-card fade-up">
+        <span class="who-icon">👥</span>
+        <h3>Team leads</h3>
+        <p>Stop re-explaining the same things every time someone new joins your team.</p>
+      </div>
+      <div class="who-card fade-up">
+        <span class="who-icon">🧑‍💼</span>
+        <h3>HR & People Ops</h3>
+        <p>A lightweight tool that gets the job done without a six-month implementation.</p>
+      </div>
+      <div class="who-card fade-up">
+        <span class="who-icon">🚀</span>
+        <h3>Scaling startups</h3>
+        <p>Formalize your culture and process before the next wave of hires lands.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-inner">
+    <div class="cta-box fade-up">
+      <h2>Be first to know when it launches</h2>
+      <p>Sheety Onboarding is in development. Join the waitlist and you'll hear as soon as it's ready.</p>
+      <div class="cta-actions">
+        <a href="{{ site.waitlistUrl }}" target="_blank" rel="noopener" class="btn-primary">{{ site.waitlistLabel }} →</a>
+        <a href="{{ site.parentUrl }}" target="_blank" rel="noopener" class="btn-ghost">Explore Sheety Tools</a>
+      </div>
+      <p class="cta-note">No spam. Just a heads up when it's live.</p>
+    </div>
+  </div>
+</section>
