@@ -356,6 +356,126 @@ tbody td { padding: 0.6rem 0.9rem; color: var(--ink); vertical-align: middle; }
   letter-spacing: 0.03em;
 }
 
+/* ─── Quick reference ────────────────────────────────────── */
+.qref {
+  margin-top: 2.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+.qref-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.qref-title {
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.qref-pdf-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--green);
+  text-decoration: none;
+  border: 1px solid var(--green-border);
+  background: var(--green-sub);
+  padding: 0.35rem 0.8rem;
+  border-radius: 7px;
+  transition: opacity 0.18s;
+}
+.qref-pdf-link:hover { opacity: 0.8; }
+
+.qref-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 600px) { .qref-cols { grid-template-columns: 1fr; } }
+
+.qref-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.qref-block-head {
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.qref-block-head.green { color: var(--green); }
+.qref-block-head.orange { color: var(--orange); }
+
+.qref-field {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.5rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+}
+.qref-field:last-child { border-bottom: none; }
+.qref-field code {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 0.76rem;
+  color: var(--green);
+  flex-shrink: 0;
+}
+.qref-field .qf-desc { color: var(--ink-2); font-size: 0.78rem; line-height: 1.5; }
+.qref-req {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.req-yes  { background: var(--green-sub); color: var(--green); border: 1px solid var(--green-border); }
+.req-no   { background: rgba(255,255,255,0.04); color: var(--ink-3); border: 1px solid var(--border); }
+
+.qref-tier-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+}
+.qref-tier-row:last-child { border-bottom: none; }
+.qref-tier-name { font-weight: 600; min-width: 64px; }
+.tier-blue   { color: #5aa0ff; }
+.tier-green  { color: var(--green); }
+.tier-orange { color: var(--orange); }
+.qref-tier-price { color: var(--ink-2); font-size: 0.78rem; min-width: 72px; }
+.qref-tier-desc  { color: var(--ink-3); font-size: 0.78rem; line-height: 1.4; }
+
+.qref-tone-row {
+  padding: 0.5rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.78rem;
+}
+.qref-tone-row:last-child { border-bottom: none; }
+.qref-tone-row code {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 0.74rem;
+  color: var(--green);
+  display: block;
+  margin-bottom: 0.2rem;
+}
+.qref-tone-row span { color: var(--ink-3); }
+
 /* ─── Center card (success / redirecting) ────────────────── */
 .center-wrap {
   max-width: 460px;
@@ -510,6 +630,49 @@ tbody td { padding: 0.6rem 0.9rem; color: var(--ink); vertical-align: middle; }
         <h2>Order confirmed</h2>
         <p>Payment received. Documents are being generated and will be emailed to each manager within a few minutes.</p>
       </div>
+    </div>
+  </div>
+
+
+  <!-- QUICK REFERENCE -->
+  <div class="qref">
+    <div class="qref-header">
+      <span class="qref-title">CSV quick reference</span>
+      <a href="/public/bulk-upload-guide.pdf" download class="qref-pdf-link">
+        &#x2B07; Full guide (PDF)
+      </a>
+    </div>
+
+    <div class="qref-cols">
+
+      <!-- Required fields -->
+      <div class="qref-block">
+        <div class="qref-block-head green">Required fields</div>
+        <div class="qref-field"><code>new_hire_name</code><span class="qref-req req-yes">req</span><span class="qf-desc">Full name of the new hire</span></div>
+        <div class="qref-field"><code>role_name</code><span class="qref-req req-yes">req</span><span class="qf-desc">Job title</span></div>
+        <div class="qref-field"><code>company_name</code><span class="qref-req req-yes">req</span><span class="qf-desc">Organisation name</span></div>
+        <div class="qref-field"><code>plan_tier</code><span class="qref-req req-yes">req</span><span class="qf-desc">Basic, Premium, or Ultimate</span></div>
+        <div class="qref-field"><code>manager_email</code><span class="qref-req req-yes">req</span><span class="qf-desc">Documents delivered here. Shared managers get one grouped email.</span></div>
+        <div class="qref-field"><code>submitter_email</code><span class="qref-req req-yes">req</span><span class="qf-desc">HR or People Ops contact. Gets the order summary.</span></div>
+      </div>
+
+      <!-- Right column -->
+      <div>
+        <div class="qref-block" style="margin-bottom:1rem">
+          <div class="qref-block-head">Tiers &amp; pricing</div>
+          <div class="qref-tier-row"><span class="qref-tier-name tier-blue">Basic</span><span class="qref-tier-price">$69 / hire</span><span class="qref-tier-desc">Hire roadmap PDF</span></div>
+          <div class="qref-tier-row"><span class="qref-tier-name tier-green">Premium</span><span class="qref-tier-price">$119 / hire</span><span class="qref-tier-desc">Roadmap + Leader Guide PDF</span></div>
+          <div class="qref-tier-row"><span class="qref-tier-name tier-orange">Ultimate</span><span class="qref-tier-price">$159 / hire</span><span class="qref-tier-desc">Premium + growth plan</span></div>
+          <div class="qref-tier-row" style="background:var(--green-sub)"><span style="font-size:0.75rem;color:var(--green)">10% off 3+ &nbsp;&middot;&nbsp; 15% off 20+ &nbsp;&middot;&nbsp; 20% off 50+</span></div>
+        </div>
+        <div class="qref-block">
+          <div class="qref-block-head orange">onboarding_tone values</div>
+          <div class="qref-tone-row"><code>relaxed and direct</code><span>Casual, conversational</span></div>
+          <div class="qref-tone-row"><code>professional but friendly</code><span>Default if blank</span></div>
+          <div class="qref-tone-row"><code>formal and structured</code><span>Corporate register</span></div>
+        </div>
+      </div>
+
     </div>
   </div>
 
