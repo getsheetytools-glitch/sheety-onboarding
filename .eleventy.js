@@ -6,6 +6,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("**/*.png");
   eleventyConfig.addPassthroughCopy("**/*.svg");
   eleventyConfig.addPassthroughCopy("**/*.webmanifest");
+  eleventyConfig.addPassthroughCopy("**/*.csv");
   eleventyConfig.addWatchTarget("css/");
 
   return {

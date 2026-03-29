@@ -1,0 +1,775 @@
+---
+layout: base.html
+title: Bulk Upload
+description: Upload a CSV of new hires, confirm the order, and documents are emailed to each manager automatically.
+robots: noindex, nofollow
+---
+
+<style>
+
+/* ─── Page shell ─────────────────────────────────────────── */
+.bulk-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3rem clamp(1.25rem, 5vw, 2.5rem) 6rem;
+}
+
+/* ─── Header ─────────────────────────────────────────────── */
+.bulk-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 0.9rem;
+}
+.bulk-eyebrow::before,
+.bulk-eyebrow::after {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 1px;
+  background: var(--green);
+  opacity: 0.35;
+}
+.bulk-h1 {
+  font-family: var(--font-head);
+  font-size: clamp(1.75rem, 4vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 0.65rem;
+}
+.bulk-h1 em { font-style: normal; color: var(--green); }
+.bulk-sub {
+  font-size: 0.9rem;
+  color: var(--ink-2);
+  max-width: 500px;
+  line-height: 1.75;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ─── Step bar ───────────────────────────────────────────── */
+.step-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 2rem;
+}
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+.step-item.active { color: var(--ink); }
+.step-item.done   { color: var(--green); }
+.step-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border-h);
+  background: var(--bg-card);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.step-item.active .step-num {
+  border-color: var(--green-border);
+  background: var(--green-sub);
+  color: var(--green);
+}
+.step-item.done .step-num {
+  background: var(--green);
+  border-color: var(--green);
+  color: #0d1f14;
+}
+.step-sep {
+  color: var(--border-h);
+  margin: 0 0.6rem;
+  font-size: 0.7rem;
+}
+
+/* ─── Drop zone ──────────────────────────────────────────── */
+.drop-zone {
+  border: 1.5px dashed var(--border-h);
+  border-radius: var(--radius);
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: var(--bg-card);
+}
+.drop-zone:hover,
+.drop-zone.drag-over {
+  border-color: var(--green);
+  background: var(--green-sub);
+}
+.drop-icon {
+  width: 48px; height: 48px;
+  margin: 0 auto 1rem;
+  background: var(--bg-2);
+  border: 1px solid var(--border-h);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+}
+.drop-zone h2 {
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.35rem;
+}
+.drop-zone p {
+  font-size: 0.84rem;
+  color: var(--ink-2);
+  margin-bottom: 1.25rem;
+}
+.template-links {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+/* ─── Buttons ────────────────────────────────────────────── */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-h);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.18s, color 0.18s;
+  text-decoration: none;
+}
+.btn-ghost:hover { border-color: var(--green); color: var(--green); }
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  background: var(--green);
+  color: #0d1f14;
+  border: none;
+  border-radius: 11px;
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.18s;
+  margin-top: 1rem;
+  letter-spacing: -0.01em;
+}
+.btn-primary:hover     { opacity: 0.88; }
+.btn-primary:disabled  { opacity: 0.35; cursor: not-allowed; }
+
+.back-btn {
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--ink-3);
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+  transition: color 0.18s;
+}
+.back-btn:hover { color: var(--ink-2); }
+
+/* ─── Error / info banners ───────────────────────────────── */
+.banner {
+  border-radius: 9px;
+  padding: 0.75rem 1rem;
+  font-size: 0.82rem;
+  margin-top: 1rem;
+  display: none;
+}
+.banner-error {
+  background: rgba(240,92,92,0.08);
+  border: 1px solid rgba(240,92,92,0.2);
+  color: #f05c5c;
+}
+.banner-warn {
+  background: rgba(240,92,92,0.08);
+  border: 1px solid rgba(240,92,92,0.2);
+  color: #f05c5c;
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+.banner-info {
+  background: var(--green-sub);
+  border: 1px solid var(--green-border);
+  color: var(--ink-2);
+  margin-top: 1.25rem;
+}
+.banner-info strong { color: var(--green); font-weight: 600; }
+
+/* ─── Review layout ──────────────────────────────────────── */
+.review-grid {
+  display: grid;
+  grid-template-columns: 1fr 284px;
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (max-width: 700px) {
+  .review-grid { grid-template-columns: 1fr; }
+}
+
+/* ─── Table ──────────────────────────────────────────────── */
+.table-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.table-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+.card-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.hire-count-pill {
+  font-size: 0.72rem;
+  color: var(--ink-3);
+}
+.table-scroll { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+thead th {
+  padding: 0.55rem 0.9rem;
+  text-align: left;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-2);
+  white-space: nowrap;
+}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--bg-card-h); }
+tbody td { padding: 0.6rem 0.9rem; color: var(--ink); vertical-align: middle; }
+
+.tier-badge {
+  display: inline-flex;
+  padding: 0.16rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.tier-basic    { background: rgba(90,160,255,0.1);  color: #5aa0ff; }
+.tier-premium  { background: var(--green-sub);      color: var(--green); }
+.tier-ultimate { background: var(--orange-sub);     color: var(--orange); }
+.tier-invalid  { background: rgba(240,92,92,0.1);   color: #f05c5c; }
+
+.row-invalid td { color: #f05c5c !important; }
+.cell-err { color: #f05c5c !important; font-style: italic; }
+
+/* ─── Pricing card ───────────────────────────────────────── */
+.pricing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: sticky;
+  top: 80px;
+}
+.pricing-card-head {
+  padding: 0.8rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+.pricing-body { padding: 1rem 1.1rem; }
+.pricing-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.82rem;
+  color: var(--ink-2);
+  margin-bottom: 0.45rem;
+}
+.pricing-row .pval { color: var(--ink); font-weight: 500; }
+.pricing-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0.7rem 0;
+}
+.pricing-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.pricing-total .plabel { font-size: 0.85rem; font-weight: 600; }
+.pricing-total .pamount {
+  font-family: var(--font-head);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--green);
+  letter-spacing: -0.03em;
+}
+.discount-pill {
+  display: inline-flex;
+  padding: 0.18rem 0.5rem;
+  background: var(--green-sub);
+  border: 1px solid var(--green-border);
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 0.03em;
+}
+
+/* ─── Center card (success / redirecting) ────────────────── */
+.center-wrap {
+  max-width: 460px;
+  margin: 4rem auto 0;
+}
+.center-card {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.center-icon {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  margin: 0 auto 1.25rem;
+  background: var(--green-sub);
+  border: 1px solid var(--green-border);
+}
+.center-card h2 {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.6rem;
+}
+.center-card p { font-size: 0.875rem; color: var(--ink-2); line-height: 1.75; }
+
+/* ─── Spinner ────────────────────────────────────────────── */
+.spinner {
+  width: 30px; height: 30px;
+  border: 2.5px solid var(--border-h);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  margin: 0 auto 1.25rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+</style>
+
+<div class="bulk-page">
+
+  <div class="bulk-eyebrow">Bulk Upload</div>
+  <h1 class="bulk-h1">Onboard your whole <em>team at once</em></h1>
+  <p class="bulk-sub">Upload a formatted CSV, confirm the order, and pay once. Documents are generated and emailed directly to each manager — one email per manager, all their hires attached.</p>
+
+  <!-- Step bar -->
+  <div class="step-bar" id="step-bar">
+    <div class="step-item active" id="step-1"><span class="step-num">1</span> Upload CSV</div>
+    <span class="step-sep">›</span>
+    <div class="step-item" id="step-2"><span class="step-num">2</span> Review &amp; pay</div>
+    <span class="step-sep">›</span>
+    <div class="step-item" id="step-3"><span class="step-num">3</span> Processing</div>
+  </div>
+
+  <!-- UPLOAD VIEW -->
+  <div id="view-upload">
+    <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+      <div class="drop-icon">📄</div>
+      <h2>Drop your CSV here</h2>
+      <p>Or click to browse. Minimum 3 hires. Use the template to format correctly.</p>
+      <span class="btn-ghost">Choose file</span>
+      <input type="file" id="file-input" accept=".csv" style="display:none">
+    </div>
+    <div class="template-links">
+      <a href="/public/bulk-template.csv" download class="btn-ghost">⬇ Download CSV template</a>
+    </div>
+    <div class="banner banner-error" id="upload-error"></div>
+  </div>
+
+  <!-- REVIEW VIEW -->
+  <div id="view-review" style="display:none">
+    <button class="back-btn" onclick="resetToUpload()">← Back to upload</button>
+    <div class="banner banner-warn" id="validation-warn"></div>
+
+    <div class="review-grid">
+      <div>
+        <div class="table-card">
+          <div class="table-card-head">
+            <span class="card-label">Hire list</span>
+            <span class="hire-count-pill" id="hire-count"></span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Company</th>
+                  <th>Tier</th>
+                  <th>Manager email</th>
+                </tr>
+              </thead>
+              <tbody id="hire-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="banner banner-info" style="display:block">
+          <strong>Manager grouping:</strong> Documents are grouped by manager email. Each manager gets one email with all their hires attached.
+        </div>
+      </div>
+
+      <!-- Pricing sidebar -->
+      <div>
+        <div class="pricing-card">
+          <div class="pricing-card-head">
+            <span class="card-label">Order summary</span>
+          </div>
+          <div class="pricing-body">
+            <div id="tier-lines"></div>
+            <hr class="pricing-divider">
+            <div class="pricing-row">
+              <span>Subtotal</span>
+              <span class="pval" id="p-subtotal"></span>
+            </div>
+            <div class="pricing-row" id="p-discount-row" style="display:none">
+              <span id="p-discount-label"></span>
+              <span class="pval" style="color:var(--green)" id="p-discount-val"></span>
+            </div>
+            <hr class="pricing-divider">
+            <div class="pricing-total">
+              <span class="plabel">Total</span>
+              <span class="pamount" id="p-total"></span>
+            </div>
+            <button class="btn-primary" id="pay-btn" onclick="submitOrder()">Confirm &amp; Pay →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REDIRECTING VIEW -->
+  <div id="view-redirecting" style="display:none">
+    <div class="center-wrap">
+      <div class="center-card">
+        <div class="spinner"></div>
+        <h2>Redirecting to payment</h2>
+        <p>Taking you to Stripe Checkout. Do not close this tab.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS VIEW -->
+  <div id="view-success" style="display:none">
+    <div class="center-wrap">
+      <div class="center-card">
+        <div class="center-icon">✓</div>
+        <h2>Order confirmed</h2>
+        <p>Payment received. Documents are being generated and will be emailed to each manager within a few minutes.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────
+var CHECKOUT_URL = 'https://sheety-docs.vercel.app/api/bulk-checkout';
+
+var PRICES       = { basic: 69, premium: 119, ultimate: 159 };
+var VALID_TIERS  = ['basic', 'premium', 'ultimate'];
+var REQUIRED     = ['new_hire_name','role_name','company_name','plan_tier','manager_email','submitter_email'];
+
+function getDiscount(n) {
+  if (n >= 50) return 0.20;
+  if (n >= 20) return 0.15;
+  if (n >= 3)  return 0.10;
+  return 0;
+}
+
+// ── State ─────────────────────────────────────────────────────────────
+var parsedRows = [];
+
+// ── Check Stripe redirect back ────────────────────────────────────────
+(function() {
+  var p = new URLSearchParams(window.location.search);
+  if (p.get('status') === 'success' && p.get('session_id')) {
+    showView('view-success');
+    setStep(3, true);
+  }
+})();
+
+// ── Drag and drop ─────────────────────────────────────────────────────
+var dropZone  = document.getElementById('drop-zone');
+var fileInput = document.getElementById('file-input');
+
+dropZone.addEventListener('dragover', function(e) {
+  e.preventDefault();
+  dropZone.classList.add('drag-over');
+});
+dropZone.addEventListener('dragleave', function() {
+  dropZone.classList.remove('drag-over');
+});
+dropZone.addEventListener('drop', function(e) {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  var file = e.dataTransfer.files[0];
+  if (file) handleFile(file);
+});
+fileInput.addEventListener('change', function() {
+  if (fileInput.files[0]) handleFile(fileInput.files[0]);
+});
+
+function handleFile(file) {
+  if (!file.name.endsWith('.csv')) {
+    showBanner('upload-error', 'Please upload a .csv file.');
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) { parseCSV(e.target.result); };
+  reader.readAsText(file);
+}
+
+// ── CSV parsing ───────────────────────────────────────────────────────
+function parseCSV(text) {
+  var lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) {
+    showBanner('upload-error', 'CSV appears empty. It needs a header row and at least one data row.');
+    return;
+  }
+
+  var headers = lines[0].split(',').map(function(h) {
+    return h.trim().toLowerCase().replace(/\s+/g, '_').replace(/['"]/g, '');
+  });
+
+  var missing = REQUIRED.filter(function(c) { return !headers.includes(c); });
+  if (missing.length) {
+    showBanner('upload-error', 'Missing required columns: ' + missing.join(', ') + '. Download the template to see the correct format.');
+    return;
+  }
+
+  var rows = [];
+  for (var i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    var vals = parseCSVLine(lines[i]);
+    var row  = {};
+    headers.forEach(function(h, idx) { row[h] = (vals[idx] || '').trim(); });
+    rows.push(row);
+  }
+
+  if (rows.length < 3) {
+    showBanner('upload-error', 'Minimum 3 hires required. Your CSV has ' + rows.length + '.');
+    return;
+  }
+
+  hideBanner('upload-error');
+  parsedRows = rows;
+  renderReview();
+}
+
+function parseCSVLine(line) {
+  var result = [], cur = '', inQ = false;
+  for (var i = 0; i < line.length; i++) {
+    var ch = line[i];
+    if (ch === '"') { inQ = !inQ; continue; }
+    if (ch === ',' && !inQ) { result.push(cur); cur = ''; continue; }
+    cur += ch;
+  }
+  result.push(cur);
+  return result;
+}
+
+// ── Review ────────────────────────────────────────────────────────────
+function renderReview() {
+  var tbody    = document.getElementById('hire-tbody');
+  tbody.innerHTML = '';
+  var hasErrors = false;
+
+  parsedRows.forEach(function(row, i) {
+    var tier     = (row.plan_tier || '').toLowerCase();
+    var validTier = VALID_TIERS.includes(tier);
+    var hasName  = !!row.new_hire_name;
+    var hasRole  = !!row.role_name;
+    var hasMgr   = !!row.manager_email;
+    var rowErr   = !validTier || !hasName || !hasRole || !hasMgr;
+    if (rowErr) hasErrors = true;
+
+    var tr = document.createElement('tr');
+    if (rowErr) tr.classList.add('row-invalid');
+    tr.innerHTML =
+      '<td style="color:var(--ink-3)">' + (i + 1) + '</td>' +
+      '<td class="' + (!hasName ? 'cell-err' : '') + '">' + (row.new_hire_name || '<em>missing</em>') + '</td>' +
+      '<td class="' + (!hasRole ? 'cell-err' : '') + '">' + (row.role_name    || '<em>missing</em>') + '</td>' +
+      '<td>' + (row.company_name || '') + '</td>' +
+      '<td>' + tierBadge(tier, validTier) + '</td>' +
+      '<td class="' + (!hasMgr ? 'cell-err' : '') + '">' + (row.manager_email || '<em>missing</em>') + '</td>';
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('hire-count').textContent = parsedRows.length + ' hire' + (parsedRows.length !== 1 ? 's' : '');
+
+  var warnEl = document.getElementById('validation-warn');
+  if (hasErrors) {
+    showBanner('validation-warn', 'Some rows have errors (shown in red). Fix your CSV and re-upload before proceeding.');
+    document.getElementById('pay-btn').disabled = true;
+  } else {
+    hideBanner('validation-warn');
+    document.getElementById('pay-btn').disabled = false;
+  }
+
+  renderPricing();
+  showView('view-review');
+  setStep(2);
+}
+
+function tierBadge(tier, valid) {
+  if (!valid) return '<span class="tier-badge tier-invalid">⚠ ' + (tier || 'missing') + '</span>';
+  return '<span class="tier-badge tier-' + tier + '">' + tier + '</span>';
+}
+
+function renderPricing() {
+  var n        = parsedRows.length;
+  var discount = getDiscount(n);
+  var counts   = { basic: 0, premium: 0, ultimate: 0 };
+  var subtotal = 0;
+
+  parsedRows.forEach(function(row) {
+    var t = (row.plan_tier || '').toLowerCase();
+    if (VALID_TIERS.includes(t)) { counts[t]++; subtotal += PRICES[t]; }
+  });
+
+  var linesHTML = '';
+  if (counts.basic)    linesHTML += priceLine('Basic &times; ' + counts.basic,    '$' + (counts.basic    * PRICES.basic).toFixed(2));
+  if (counts.premium)  linesHTML += priceLine('Premium &times; ' + counts.premium,  '$' + (counts.premium  * PRICES.premium).toFixed(2));
+  if (counts.ultimate) linesHTML += priceLine('Ultimate &times; ' + counts.ultimate, '$' + (counts.ultimate * PRICES.ultimate).toFixed(2));
+  document.getElementById('tier-lines').innerHTML = linesHTML;
+
+  document.getElementById('p-subtotal').textContent = '$' + subtotal.toFixed(2);
+
+  var discountRow = document.getElementById('p-discount-row');
+  if (discount > 0) {
+    var amt = Math.round(subtotal * discount * 100) / 100;
+    discountRow.style.display = 'flex';
+    document.getElementById('p-discount-label').innerHTML = '<span class="discount-pill">&minus;' + (discount * 100) + '% bulk</span>';
+    document.getElementById('p-discount-val').textContent = '&minus;$' + amt.toFixed(2);
+    document.getElementById('p-total').textContent = '$' + (subtotal - amt).toFixed(2);
+  } else {
+    discountRow.style.display = 'none';
+    document.getElementById('p-total').textContent = '$' + subtotal.toFixed(2);
+  }
+}
+
+function priceLine(label, val) {
+  return '<div class="pricing-row"><span>' + label + '</span><span class="pval">' + val + '</span></div>';
+}
+
+// ── Submit ────────────────────────────────────────────────────────────
+function submitOrder() {
+  var btn = document.getElementById('pay-btn');
+  btn.disabled    = true;
+  btn.textContent = 'Preparing checkout\u2026';
+
+  var payload = {
+    rows:            parsedRows,
+    company_name:    parsedRows[0].company_name    || '',
+    submitter_email: parsedRows[0].submitter_email || '',
+    success_url: window.location.origin + window.location.pathname + '?status=success&session_id={CHECKOUT_SESSION_ID}',
+    cancel_url:  window.location.origin + window.location.pathname,
+  };
+
+  fetch(CHECKOUT_URL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(payload),
+  })
+  .then(function(res) { return res.json().then(function(d) { return { ok: res.ok, data: d }; }); })
+  .then(function(r) {
+    if (!r.ok || !r.data.url) throw new Error(r.data.error || 'Checkout creation failed');
+    showView('view-redirecting');
+    setStep(3);
+    window.location.href = r.data.url;
+  })
+  .catch(function(err) {
+    btn.disabled    = false;
+    btn.textContent = 'Confirm & Pay \u2192';
+    showBanner('validation-warn', 'Error: ' + err.message + '. Please try again.');
+  });
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────
+function showView(id) {
+  ['view-upload','view-review','view-redirecting','view-success'].forEach(function(v) {
+    document.getElementById(v).style.display = v === id ? 'block' : 'none';
+  });
+}
+
+function resetToUpload() {
+  parsedRows = [];
+  fileInput.value = '';
+  hideBanner('upload-error');
+  showView('view-upload');
+  setStep(1);
+}
+
+function showBanner(id, msg) {
+  var el = document.getElementById(id);
+  el.style.display = 'block';
+  el.textContent   = msg;
+}
+
+function hideBanner(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+function setStep(n, done) {
+  for (var i = 1; i <= 3; i++) {
+    var el = document.getElementById('step-' + i);
+    el.classList.remove('active','done');
+    if (i < n)       el.classList.add('done');
+    else if (i === n) el.classList.add(done ? 'done' : 'active');
+  }
+}
+</script>
