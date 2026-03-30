@@ -679,6 +679,94 @@ tbody td { padding: 0.6rem 0.9rem; color: var(--ink); vertical-align: middle; }
     <button class="back-btn" onclick="resetToUpload()">← Back to upload</button>
     <div class="banner banner-warn" id="validation-warn"></div>
 
+    <!-- Document preview carousel -->
+    <div class="carousel-wrap" style="margin-bottom:1.5rem">
+      <div class="carousel-label">What gets generated</div>
+      <div class="carousel-track-outer">
+        <div class="carousel-track" id="carousel-track">
+
+          <!-- Hire Roadmap -->
+          <div class="doc-card">
+            <div class="doc-card-header"></div>
+            <div class="doc-card-body">
+              <div class="doc-card-eyebrow">All tiers</div>
+              <div class="doc-card-title">Onboarding Roadmap</div>
+              <div class="doc-card-lines">
+                <div class="doc-line full accent"></div>
+                <div class="doc-line med"></div>
+                <div class="doc-line short"></div>
+              </div>
+              <div class="doc-milestone">Day 1 — orientation</div>
+              <div class="doc-milestone">Week 1 — tools setup</div>
+              <div class="doc-milestone">Month 1 — first wins</div>
+              <div class="doc-milestone">Month 2 — full ramp</div>
+              <div class="doc-milestone">Month 3 — independence</div>
+            </div>
+            <div class="doc-card-footer">Sent to new hire</div>
+          </div>
+
+          <!-- Leader Guide -->
+          <div class="doc-card leader">
+            <div class="doc-card-header"></div>
+            <div class="doc-card-body">
+              <div class="doc-card-eyebrow">Premium + Ultimate</div>
+              <div class="doc-card-title">Leader Guide</div>
+              <div class="doc-card-lines">
+                <div class="doc-line full accent"></div>
+                <div class="doc-line med"></div>
+                <div class="doc-line short"></div>
+              </div>
+              <div class="doc-milestone">Manager focus points</div>
+              <div class="doc-milestone">Check-in prompts</div>
+              <div class="doc-milestone">Milestone sign-offs</div>
+              <div class="doc-milestone">Red flags to watch</div>
+              <div class="doc-milestone">Feedback guidance</div>
+            </div>
+            <div class="doc-card-footer">Sent to manager</div>
+          </div>
+
+          <!-- Growth Plan -->
+          <div class="doc-card growth">
+            <div class="doc-card-header"></div>
+            <div class="doc-card-body">
+              <div class="doc-card-eyebrow">Ultimate only</div>
+              <div class="doc-card-title">Growth Plan</div>
+              <div class="doc-card-lines">
+                <div class="doc-line full accent"></div>
+                <div class="doc-line med"></div>
+                <div class="doc-line short"></div>
+              </div>
+              <div class="doc-milestone">Development areas</div>
+              <div class="doc-milestone">Confidence markers</div>
+              <div class="doc-milestone">Success signals</div>
+              <div class="doc-milestone">90-day targets</div>
+              <div class="doc-milestone">Growth track</div>
+            </div>
+            <div class="doc-card-footer">Included in roadmap</div>
+          </div>
+
+          <!-- Delivery summary -->
+          <div class="doc-card" style="flex:0 0 200px">
+            <div class="doc-card-header" style="background:var(--green-sub);height:6px"></div>
+            <div class="doc-card-body">
+              <div class="doc-card-eyebrow" style="color:var(--ink-3)">Delivery</div>
+              <div class="doc-card-title">How it arrives</div>
+              <div style="font-size:0.78rem;color:var(--ink-2);line-height:1.65;margin-top:0.25rem">
+                Each manager gets one email with all their hires attached. You receive a confirmation summary and are CCd on every manager email.
+              </div>
+            </div>
+            <div class="doc-card-footer" style="color:var(--green)">via Resend</div>
+          </div>
+
+        </div>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-btn" id="carousel-prev" onclick="carouselMove(-1)" disabled>‹</button>
+        <button class="carousel-btn" id="carousel-next" onclick="carouselMove(1)">›</button>
+        <div class="carousel-dots" id="carousel-dots"></div>
+      </div>
+    </div>
+
     <div class="review-grid">
       <div>
         <div class="table-card">
@@ -704,94 +792,6 @@ tbody td { padding: 0.6rem 0.9rem; color: var(--ink); vertical-align: middle; }
         </div>
         <div class="banner banner-info" style="display:block">
           <strong>Manager grouping:</strong> Documents are grouped by manager email. Each manager gets one or more emails with all their hires attached. Managers with more than 15 hires receive multiple emails.
-        </div>
-
-        <!-- Document preview carousel -->
-        <div class="carousel-wrap">
-          <div class="carousel-label">What gets generated</div>
-          <div class="carousel-track-outer">
-            <div class="carousel-track" id="carousel-track">
-
-              <!-- Hire Roadmap -->
-              <div class="doc-card">
-                <div class="doc-card-header"></div>
-                <div class="doc-card-body">
-                  <div class="doc-card-eyebrow">All tiers</div>
-                  <div class="doc-card-title">Onboarding Roadmap</div>
-                  <div class="doc-card-lines">
-                    <div class="doc-line full accent"></div>
-                    <div class="doc-line med"></div>
-                    <div class="doc-line short"></div>
-                  </div>
-                  <div class="doc-milestone">Day 1 — orientation</div>
-                  <div class="doc-milestone">Week 1 — tools setup</div>
-                  <div class="doc-milestone">Month 1 — first wins</div>
-                  <div class="doc-milestone">Month 2 — full ramp</div>
-                  <div class="doc-milestone">Month 3 — independence</div>
-                </div>
-                <div class="doc-card-footer">Sent to new hire</div>
-              </div>
-
-              <!-- Leader Guide -->
-              <div class="doc-card leader">
-                <div class="doc-card-header"></div>
-                <div class="doc-card-body">
-                  <div class="doc-card-eyebrow">Premium + Ultimate</div>
-                  <div class="doc-card-title">Leader Guide</div>
-                  <div class="doc-card-lines">
-                    <div class="doc-line full accent"></div>
-                    <div class="doc-line med"></div>
-                    <div class="doc-line short"></div>
-                  </div>
-                  <div class="doc-milestone">Manager focus points</div>
-                  <div class="doc-milestone">Check-in prompts</div>
-                  <div class="doc-milestone">Milestone sign-offs</div>
-                  <div class="doc-milestone">Red flags to watch</div>
-                  <div class="doc-milestone">Feedback guidance</div>
-                </div>
-                <div class="doc-card-footer">Sent to manager</div>
-              </div>
-
-              <!-- Growth Plan -->
-              <div class="doc-card growth">
-                <div class="doc-card-header"></div>
-                <div class="doc-card-body">
-                  <div class="doc-card-eyebrow">Ultimate only</div>
-                  <div class="doc-card-title">Growth Plan</div>
-                  <div class="doc-card-lines">
-                    <div class="doc-line full accent"></div>
-                    <div class="doc-line med"></div>
-                    <div class="doc-line short"></div>
-                  </div>
-                  <div class="doc-milestone">Development areas</div>
-                  <div class="doc-milestone">Confidence markers</div>
-                  <div class="doc-milestone">Success signals</div>
-                  <div class="doc-milestone">90-day targets</div>
-                  <div class="doc-milestone">Growth track</div>
-                </div>
-                <div class="doc-card-footer">Included in roadmap</div>
-              </div>
-
-              <!-- Delivery summary -->
-              <div class="doc-card" style="flex:0 0 200px">
-                <div class="doc-card-header" style="background:var(--green-sub);height:6px"></div>
-                <div class="doc-card-body">
-                  <div class="doc-card-eyebrow" style="color:var(--ink-3)">Delivery</div>
-                  <div class="doc-card-title">How it arrives</div>
-                  <div style="font-size:0.78rem;color:var(--ink-2);line-height:1.65;margin-top:0.25rem">
-                    Each manager gets one email with all their hires attached. You receive a confirmation summary and are CCd on every manager email.
-                  </div>
-                </div>
-                <div class="doc-card-footer" style="color:var(--green)">via Resend</div>
-              </div>
-
-            </div>
-          </div>
-          <div class="carousel-controls">
-            <button class="carousel-btn" id="carousel-prev" onclick="carouselMove(-1)" disabled>‹</button>
-            <button class="carousel-btn" id="carousel-next" onclick="carouselMove(1)">›</button>
-            <div class="carousel-dots" id="carousel-dots"></div>
-          </div>
         </div>
       </div>
 
@@ -859,16 +859,21 @@ tbody td { padding: 0.6rem 0.9rem; color: var(--ink); vertical-align: middle; }
     <div class="qref-cols">
 
       <!-- Required fields -->
-      <div class="qref-block">
-        <div class="qref-block-head green">Required fields</div>
-        <div class="qref-field"><code>new_hire_name</code><span class="qref-req req-yes">req</span><span class="qf-desc">First name of the new hire</span></div>
-        <div class="qref-field"><code>role_name</code><span class="qref-req req-yes">req</span><span class="qf-desc">Job title</span></div>
-        <div class="qref-field"><code>company_name</code><span class="qref-req req-yes">req</span><span class="qf-desc">Organisation name</span></div>
-        <div class="qref-field"><code>plan_tier</code><span class="qref-req req-yes">req</span><span class="qf-desc">Basic, Premium, or Ultimate</span></div>
-        <div class="qref-field"><code>manager_email</code><span class="qref-req req-yes">req</span><span class="qf-desc">Documents delivered here. Managers with 15+ hires get multiple emails.</span></div>
-        <div class="qref-field"><code>submitter_email</code><span class="qref-req req-yes">req</span><span class="qf-desc">Backup contact for documents. Gets the order summary.</span></div>
-        <div class="qref-field"><code>logo_url</code><span class="qref-req req-no">opt</span><span class="qf-desc">Direct URL to company logo. Used in document header.</span></div>
-        <div class="qref-field"><code>accent_color</code><span class="qref-req req-no">opt</span><span class="qf-desc">6-char hex, no #. Defaults to Sheety green.</span></div>
+      <div>
+        <div class="qref-block" style="margin-bottom:1rem">
+          <div class="qref-block-head green">Required fields</div>
+          <div class="qref-field"><code>new_hire_name</code><span class="qref-req req-yes">req</span><span class="qf-desc">First name of the new hire</span></div>
+          <div class="qref-field"><code>role_name</code><span class="qref-req req-yes">req</span><span class="qf-desc">Job title</span></div>
+          <div class="qref-field"><code>company_name</code><span class="qref-req req-yes">req</span><span class="qf-desc">Organisation name</span></div>
+          <div class="qref-field"><code>plan_tier</code><span class="qref-req req-yes">req</span><span class="qf-desc">Basic, Premium, or Ultimate</span></div>
+          <div class="qref-field"><code>manager_email</code><span class="qref-req req-yes">req</span><span class="qf-desc">Documents delivered here. Managers with 15+ hires get multiple emails.</span></div>
+          <div class="qref-field"><code>submitter_email</code><span class="qref-req req-yes">req</span><span class="qf-desc">Backup contact for documents. Gets the order summary.</span></div>
+        </div>
+        <div class="qref-block">
+          <div class="qref-block-head">Optional fields</div>
+          <div class="qref-field"><code>logo_url</code><span class="qref-req req-no">opt</span><span class="qf-desc">Direct URL to company logo. Used in document header.</span></div>
+          <div class="qref-field"><code>accent_color</code><span class="qref-req req-no">opt</span><span class="qf-desc">6-char hex, no #. Defaults to Sheety green.</span></div>
+        </div>
       </div>
 
       <!-- Right column -->
