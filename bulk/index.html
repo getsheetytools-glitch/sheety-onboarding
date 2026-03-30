@@ -578,7 +578,7 @@ tbody td { padding: 0.6rem 0.9rem; color: var(--ink); vertical-align: middle; }
           </div>
         </div>
         <div class="banner banner-info" style="display:block">
-          <strong>Manager grouping:</strong> Documents are grouped by manager email. Each manager gets one email with all their hires attached.
+          <strong>Manager grouping:</strong> Documents are grouped by manager email. Each manager gets one or more emails with all their hires attached. Managers with more than 15 hires receive multiple emails.
         </div>
       </div>
 
@@ -648,12 +648,12 @@ tbody td { padding: 0.6rem 0.9rem; color: var(--ink); vertical-align: middle; }
       <!-- Required fields -->
       <div class="qref-block">
         <div class="qref-block-head green">Required fields</div>
-        <div class="qref-field"><code>new_hire_name</code><span class="qref-req req-yes">req</span><span class="qf-desc">Full name of the new hire</span></div>
+        <div class="qref-field"><code>new_hire_name</code><span class="qref-req req-yes">req</span><span class="qf-desc">First name of the new hire</span></div>
         <div class="qref-field"><code>role_name</code><span class="qref-req req-yes">req</span><span class="qf-desc">Job title</span></div>
         <div class="qref-field"><code>company_name</code><span class="qref-req req-yes">req</span><span class="qf-desc">Organisation name</span></div>
         <div class="qref-field"><code>plan_tier</code><span class="qref-req req-yes">req</span><span class="qf-desc">Basic, Premium, or Ultimate</span></div>
-        <div class="qref-field"><code>manager_email</code><span class="qref-req req-yes">req</span><span class="qf-desc">Documents delivered here. Shared managers get one grouped email.</span></div>
-        <div class="qref-field"><code>submitter_email</code><span class="qref-req req-yes">req</span><span class="qf-desc">HR or People Ops contact. Gets the order summary.</span></div>
+        <div class="qref-field"><code>manager_email</code><span class="qref-req req-yes">req</span><span class="qf-desc">Documents delivered here. Managers with 15+ hires get multiple emails.</span></div>
+        <div class="qref-field"><code>submitter_email</code><span class="qref-req req-yes">req</span><span class="qf-desc">Backup contact for documents. Gets the order summary.</span></div>
       </div>
 
       <!-- Right column -->
@@ -857,7 +857,7 @@ function renderPricing() {
     var amt = Math.round(subtotal * discount * 100) / 100;
     discountRow.style.display = 'flex';
     document.getElementById('p-discount-label').innerHTML = '<span class="discount-pill">&minus;' + (discount * 100) + '% bulk</span>';
-    document.getElementById('p-discount-val').textContent = '&minus;$' + amt.toFixed(2);
+    document.getElementById('p-discount-val').textContent = '\u2212$' + amt.toFixed(2);
     document.getElementById('p-total').textContent = '$' + (subtotal - amt).toFixed(2);
   } else {
     discountRow.style.display = 'none';
