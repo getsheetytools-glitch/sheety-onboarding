@@ -1,0 +1,948 @@
+---
+layout: base.html
+title: Order Onboarding Documents
+description: Generate personalised onboarding documents for a new hire. Delivered to your inbox within minutes.
+robots: noindex, nofollow
+---
+
+<style>
+
+/* ─── Page shell ─────────────────────────────────────────── */
+.order-page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 3rem clamp(1.25rem, 5vw, 2.5rem) 6rem;
+}
+
+/* ─── Header ─────────────────────────────────────────────── */
+.order-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 0.9rem;
+}
+.order-eyebrow::before, .order-eyebrow::after {
+  content: '';
+  display: inline-block;
+  width: 16px; height: 1px;
+  background: var(--green);
+  opacity: 0.35;
+}
+.order-h1 {
+  font-family: var(--font-head);
+  font-size: clamp(1.75rem, 4vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 0.6rem;
+}
+.order-h1 em { font-style: normal; color: var(--green); }
+.order-sub {
+  font-size: 0.9rem;
+  color: var(--ink-2);
+  line-height: 1.75;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ─── Step bar ───────────────────────────────────────────── */
+.step-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+.step-item.active { color: var(--ink); }
+.step-item.done   { color: var(--green); }
+.step-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border-h);
+  background: var(--bg-card);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.step-item.active .step-num {
+  border-color: var(--green-border);
+  background: var(--green-sub);
+  color: var(--green);
+}
+.step-item.done .step-num {
+  background: var(--green);
+  border-color: var(--green);
+  color: #0d1f14;
+}
+.step-sep { color: var(--border-h); margin: 0 0.6rem; font-size: 0.7rem; }
+
+/* ─── Tier cards ─────────────────────────────────────────── */
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 520px) { .tier-grid { grid-template-columns: 1fr; } }
+
+.tier-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+  user-select: none;
+  position: relative;
+}
+.tier-card:hover { border-color: var(--border-h); }
+.tier-card.selected {
+  border-color: var(--green);
+  background: var(--green-sub);
+}
+.tier-card.selected-premium { border-color: #5aa0ff; background: rgba(90,160,255,0.06); }
+.tier-card.selected-ultimate { border-color: var(--orange); background: var(--orange-sub); }
+
+.tier-name {
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.2rem;
+}
+.tier-name.basic    { color: #5aa0ff; }
+.tier-name.premium  { color: var(--green); }
+.tier-name.ultimate { color: var(--orange); }
+
+.tier-price {
+  font-family: var(--font-head);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 0.7rem;
+}
+.tier-price span { font-size: 0.75rem; font-weight: 400; color: var(--ink-3); }
+
+.tier-features { display: flex; flex-direction: column; gap: 0.35rem; }
+.tier-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--ink-2);
+  line-height: 1.4;
+}
+.tier-feature::before {
+  content: '✓';
+  color: var(--green);
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+.tier-feature.muted { color: var(--ink-3); }
+.tier-feature.muted::before { color: var(--ink-3); content: '–'; }
+
+.tier-selected-badge {
+  position: absolute;
+  top: 0.6rem; right: 0.6rem;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--green);
+  display: none;
+  align-items: center; justify-content: center;
+  font-size: 0.6rem;
+  color: #0d1f14;
+  font-weight: 700;
+}
+.tier-card.selected .tier-selected-badge { display: flex; }
+
+/* ─── Form fields ────────────────────────────────────────── */
+.form-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.form-section-head {
+  padding: 0.8rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.form-section-head .section-tier-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0.45rem;
+  border-radius: 3px;
+}
+.badge-premium  { background: rgba(90,160,255,0.1); color: #5aa0ff; }
+.badge-ultimate { background: var(--orange-sub); color: var(--orange); }
+
+.form-body { padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.9rem; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+@media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
+
+.field { display: flex; flex-direction: column; gap: 0.35rem; }
+.field label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.field label .req {
+  color: var(--green);
+  margin-left: 0.2rem;
+  font-size: 0.7rem;
+}
+.field label .opt {
+  color: var(--ink-3);
+  font-size: 0.68rem;
+  font-weight: 400;
+  margin-left: 0.25rem;
+}
+
+.field input, .field select, .field textarea {
+  background: var(--bg-2);
+  border: 1px solid var(--border-h);
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  transition: border-color 0.18s;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--green);
+}
+.field input.error, .field select.error, .field textarea.error {
+  border-color: #f05c5c;
+}
+.field textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
+.field select { cursor: pointer; }
+.field .hint {
+  font-size: 0.72rem;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+
+/* ─── Accent color preview ───────────────────────────────── */
+.color-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.color-preview {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  background: #2ec97e;
+  border: 1px solid var(--border-h);
+  flex-shrink: 0;
+  transition: background 0.18s;
+}
+
+/* ─── Review card ────────────────────────────────────────── */
+.review-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.review-card-head {
+  padding: 0.8rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.edit-link {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--green);
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.review-body { padding: 0.85rem 1.1rem; }
+.review-row {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.82rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.review-row:last-child { border-bottom: none; }
+.review-label { color: var(--ink-3); min-width: 120px; flex-shrink: 0; }
+.review-val   { color: var(--ink); word-break: break-all; }
+
+.price-summary {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+.price-label { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+.price-amount {
+  font-family: var(--font-head);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--green);
+  letter-spacing: -0.03em;
+}
+
+/* ─── Buttons ────────────────────────────────────────────── */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  background: var(--green);
+  color: #0d1f14;
+  border: none;
+  border-radius: 11px;
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.18s;
+  letter-spacing: -0.01em;
+}
+.btn-primary:hover    { opacity: 0.88; }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+.back-btn {
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--ink-3);
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: color 0.18s;
+  white-space: nowrap;
+}
+.back-btn:hover { color: var(--ink-2); }
+
+/* ─── Error banner ───────────────────────────────────────── */
+.form-error {
+  background: rgba(240,92,92,0.08);
+  border: 1px solid rgba(240,92,92,0.2);
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  font-size: 0.82rem;
+  color: #f05c5c;
+  margin-bottom: 1rem;
+  display: none;
+}
+
+/* ─── Success / redirecting ──────────────────────────────── */
+.center-wrap { max-width: 460px; margin: 4rem auto 0; }
+.center-card {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.center-icon {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  margin: 0 auto 1.25rem;
+  background: var(--green-sub);
+  border: 1px solid var(--green-border);
+}
+.center-card h2 {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.6rem;
+}
+.center-card p { font-size: 0.875rem; color: var(--ink-2); line-height: 1.75; }
+.spinner {
+  width: 30px; height: 30px;
+  border: 2.5px solid var(--border-h);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  margin: 0 auto 1.25rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+</style>
+
+<div class="order-page">
+
+  <div class="order-eyebrow">Single Hire</div>
+  <h1 class="order-h1">Order <em>onboarding documents</em></h1>
+  <p class="order-sub">Documents generated and emailed to you within minutes. No subscription, no recurring fees.</p>
+
+  <!-- Step bar -->
+  <div class="step-bar" id="step-bar">
+    <div class="step-item active" id="step-1"><span class="step-num">1</span> Tier</div>
+    <span class="step-sep">›</span>
+    <div class="step-item" id="step-2"><span class="step-num">2</span> Hire details</div>
+    <span class="step-sep">›</span>
+    <div class="step-item" id="step-3"><span class="step-num">3</span> Contacts</div>
+    <span class="step-sep">›</span>
+    <div class="step-item" id="step-4"><span class="step-num">4</span> Review &amp; pay</div>
+  </div>
+
+  <div class="form-error" id="form-error"></div>
+
+  <!-- ── STEP 1: TIER ── -->
+  <div id="view-tier">
+    <div class="tier-grid">
+
+      <div class="tier-card" id="card-basic" onclick="selectTier('basic')">
+        <div class="tier-selected-badge">✓</div>
+        <div class="tier-name basic">Basic</div>
+        <div class="tier-price">$69 <span>one-time</span></div>
+        <div class="tier-features">
+          <div class="tier-feature">Onboarding Roadmap PDF</div>
+          <div class="tier-feature">Five structured milestones</div>
+          <div class="tier-feature">Tone &amp; brand customisation</div>
+          <div class="tier-feature muted">No leader guide</div>
+        </div>
+      </div>
+
+      <div class="tier-card" id="card-premium" onclick="selectTier('premium')">
+        <div class="tier-selected-badge" style="background:#5aa0ff">✓</div>
+        <div class="tier-name premium">Premium</div>
+        <div class="tier-price">$119 <span>one-time</span></div>
+        <div class="tier-features">
+          <div class="tier-feature">Onboarding Roadmap PDF</div>
+          <div class="tier-feature">Five structured milestones</div>
+          <div class="tier-feature">Tone &amp; brand customisation</div>
+          <div class="tier-feature">Leader Guide PDF</div>
+        </div>
+      </div>
+
+      <div class="tier-card" id="card-ultimate" onclick="selectTier('ultimate')">
+        <div class="tier-selected-badge" style="background:var(--orange)">✓</div>
+        <div class="tier-name ultimate">Ultimate</div>
+        <div class="tier-price">$159 <span>one-time</span></div>
+        <div class="tier-features">
+          <div class="tier-feature">Onboarding Roadmap PDF</div>
+          <div class="tier-feature">Five structured milestones</div>
+          <div class="tier-feature">Tone &amp; brand customisation</div>
+          <div class="tier-feature">Leader Guide PDF</div>
+          <div class="tier-feature">Growth plan &amp; dev track</div>
+        </div>
+      </div>
+
+    </div>
+    <button class="btn-primary" id="tier-next-btn" onclick="goToStep(2)" disabled>Continue →</button>
+  </div>
+
+  <!-- ── STEP 2: HIRE DETAILS ── -->
+  <div id="view-hire" style="display:none">
+
+    <div class="form-section">
+      <div class="form-section-head">Hire information</div>
+      <div class="form-body">
+        <div class="field-row">
+          <div class="field">
+            <label>First name <span class="req">*</span></label>
+            <input type="text" id="new_hire_name" placeholder="e.g. Jordan">
+          </div>
+          <div class="field">
+            <label>Role / job title <span class="req">*</span></label>
+            <input type="text" id="role_name" placeholder="e.g. Marketing Coordinator">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Company name <span class="req">*</span></label>
+            <input type="text" id="company_name" placeholder="e.g. Acme Corp">
+          </div>
+          <div class="field">
+            <label>Department <span class="opt">optional</span></label>
+            <input type="text" id="department_name" placeholder="e.g. Engineering">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-head">Document style</div>
+      <div class="form-body">
+        <div class="field-row">
+          <div class="field">
+            <label>Tone <span class="opt">optional</span></label>
+            <select id="onboarding_tone">
+              <option value="professional but friendly">Professional but friendly (default)</option>
+              <option value="relaxed and direct">Relaxed and direct</option>
+              <option value="formal and structured">Formal and structured</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Brand accent colour <span class="opt">optional</span></label>
+            <div class="color-row">
+              <div class="color-preview" id="color-preview"></div>
+              <input type="text" id="accent_color" placeholder="2ec97e" maxlength="7"
+                     oninput="updateColorPreview()" style="font-family:monospace">
+            </div>
+            <span class="hint">Hex code without #. Defaults to Sheety green.</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Logo URL <span class="opt">optional</span></label>
+          <input type="url" id="logo_url" placeholder="https://yoursite.com/logo.png">
+          <span class="hint">Direct link to a .png or .jpg image. Must be publicly accessible.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-head">Role context <span class="hint" style="text-transform:none;letter-spacing:0;font-size:0.72rem;color:var(--ink-3);font-weight:400"> — improves document quality</span></div>
+      <div class="form-body">
+        <div class="field">
+          <label>Key responsibilities <span class="opt">optional</span></label>
+          <textarea id="role_tasks" placeholder="What will this person primarily be doing? One item per line works well."></textarea>
+        </div>
+        <div class="field">
+          <label>Tools they will use <span class="opt">optional</span></label>
+          <input type="text" id="tools_text" placeholder="e.g. Jira, Slack, Figma, Google Workspace">
+        </div>
+        <div class="field">
+          <label>Common early challenges <span class="opt">optional</span></label>
+          <textarea id="challenges_text" placeholder="What do new hires in this role typically find hard in the first few weeks?"></textarea>
+        </div>
+        <div class="field">
+          <label>How your team onboards <span class="opt">optional</span></label>
+          <textarea id="onboarding_approach" placeholder="e.g. We pair new hires with a buddy for the first month and prefer learning by doing."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Premium+ fields -->
+    <div class="form-section" id="section-premium" style="display:none">
+      <div class="form-section-head">
+        Leader context
+        <span class="section-tier-badge badge-premium">Premium +</span>
+      </div>
+      <div class="form-body">
+        <div class="field">
+          <label>What success looks like <span class="opt">optional</span></label>
+          <textarea id="success_signal" placeholder="e.g. By month 2 they are independently managing their workload and asking good questions."></textarea>
+        </div>
+        <div class="field">
+          <label>How you will confirm readiness <span class="opt">optional</span></label>
+          <textarea id="confidence_method" placeholder="e.g. A direct conversation at each milestone checkpoint."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ultimate-only fields -->
+    <div class="form-section" id="section-ultimate" style="display:none">
+      <div class="form-section-head">
+        Growth &amp; development
+        <span class="section-tier-badge badge-ultimate">Ultimate</span>
+      </div>
+      <div class="form-body">
+        <div class="field">
+          <label>Growth areas <span class="opt">optional</span></label>
+          <textarea id="growth_areas" placeholder="Areas you want this person to develop over time."></textarea>
+        </div>
+        <div class="field">
+          <label>Development plan <span class="opt">optional</span></label>
+          <textarea id="development_plan" placeholder="Any formal development plan, goals, or learning track for this hire."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="back-btn" onclick="goToStep(1)">← Back</button>
+      <button class="btn-primary" onclick="validateAndGoToStep3()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 3: CONTACTS ── -->
+  <div id="view-contacts" style="display:none">
+
+    <div class="form-section">
+      <div class="form-section-head">Hiring manager</div>
+      <div class="form-body">
+        <div class="field-row">
+          <div class="field">
+            <label>Manager email <span class="req">*</span></label>
+            <input type="email" id="manager_email" placeholder="manager@company.com">
+            <span class="hint">Documents are delivered here.</span>
+          </div>
+          <div class="field">
+            <label>Manager name <span class="opt">optional</span></label>
+            <input type="text" id="manager_name" placeholder="First name or full name">
+          </div>
+        </div>
+        <div class="field">
+          <label>Manager phone <span class="opt">optional</span></label>
+          <input type="text" id="manager_phone" placeholder="Included in document contact section">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-head">Your details</div>
+      <div class="form-body">
+        <div class="field">
+          <label>Your email <span class="req">*</span></label>
+          <input type="email" id="submitter_email" placeholder="you@company.com">
+          <span class="hint">You will be CCd on the manager email and receive the payment confirmation.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-head">Onboarding buddy <span class="hint" style="text-transform:none;letter-spacing:0;font-size:0.72rem;color:var(--ink-3);font-weight:400"> — optional</span></div>
+      <div class="form-body">
+        <div class="field-row">
+          <div class="field">
+            <label>Buddy name <span class="opt">optional</span></label>
+            <input type="text" id="onboarding_partner" placeholder="Name of onboarding contact">
+          </div>
+          <div class="field">
+            <label>Buddy email <span class="opt">optional</span></label>
+            <input type="email" id="partner_email" placeholder="Shown in document for hire's reference">
+          </div>
+        </div>
+        <div class="field">
+          <label>Buddy phone <span class="opt">optional</span></label>
+          <input type="text" id="partner_phone" placeholder="">
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="back-btn" onclick="goToStep(2)">← Back</button>
+      <button class="btn-primary" onclick="validateAndGoToStep4()">Review order →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 4: REVIEW & PAY ── -->
+  <div id="view-review" style="display:none">
+
+    <div class="review-card">
+      <div class="review-card-head">
+        Tier
+        <span class="edit-link" onclick="goToStep(1)">Edit</span>
+      </div>
+      <div class="review-body">
+        <div class="review-row">
+          <span class="review-label">Plan</span>
+          <span class="review-val" id="r-tier"></span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Price</span>
+          <span class="review-val" id="r-price"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-card-head">
+        Hire details
+        <span class="edit-link" onclick="goToStep(2)">Edit</span>
+      </div>
+      <div class="review-body" id="r-hire-body"></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-card-head">
+        Contacts
+        <span class="edit-link" onclick="goToStep(3)">Edit</span>
+      </div>
+      <div class="review-body" id="r-contacts-body"></div>
+    </div>
+
+    <div class="price-summary">
+      <span class="price-label">Total</span>
+      <span class="price-amount" id="r-total"></span>
+    </div>
+
+    <button class="btn-primary" id="pay-btn" onclick="submitOrder()">Confirm &amp; Pay →</button>
+    <button class="back-btn" style="margin-top:0.85rem" onclick="goToStep(3)">← Back</button>
+  </div>
+
+  <!-- ── REDIRECTING ── -->
+  <div id="view-redirecting" style="display:none">
+    <div class="center-wrap">
+      <div class="center-card">
+        <div class="spinner"></div>
+        <h2>Redirecting to payment</h2>
+        <p>Taking you to Stripe Checkout. Do not close this tab.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SUCCESS ── -->
+  <div id="view-success" style="display:none">
+    <div class="center-wrap">
+      <div class="center-card">
+        <div class="center-icon">✓</div>
+        <h2>Order confirmed</h2>
+        <p>Payment received. Your documents are being generated and will be emailed within a few minutes.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────
+var CHECKOUT_URL = 'https://sheety-docs.vercel.app/api/single-checkout';
+var PRICES = { basic: 69, premium: 119, ultimate: 159 };
+
+// ── State ─────────────────────────────────────────────────────────────
+var selectedTier = null;
+
+// ── Init ──────────────────────────────────────────────────────────────
+(function() {
+  var p = new URLSearchParams(window.location.search);
+  if (p.get('status') === 'success' && p.get('session_id')) {
+    showView('view-success');
+    setStep(4, true);
+  }
+  updateColorPreview();
+})();
+
+// ── Tier selection ────────────────────────────────────────────────────
+function selectTier(tier) {
+  selectedTier = tier;
+  ['basic','premium','ultimate'].forEach(function(t) {
+    var card = document.getElementById('card-' + t);
+    card.classList.remove('selected','selected-premium','selected-ultimate');
+  });
+  var card = document.getElementById('card-' + tier);
+  if (tier === 'basic')    card.classList.add('selected');
+  if (tier === 'premium')  card.classList.add('selected-premium');
+  if (tier === 'ultimate') card.classList.add('selected-ultimate');
+  document.getElementById('tier-next-btn').disabled = false;
+
+  // Show/hide conditional sections
+  document.getElementById('section-premium').style.display =
+    (tier === 'premium' || tier === 'ultimate') ? 'block' : 'none';
+  document.getElementById('section-ultimate').style.display =
+    tier === 'ultimate' ? 'block' : 'none';
+}
+
+// ── Navigation ────────────────────────────────────────────────────────
+function goToStep(n) {
+  hideError();
+  var views = ['view-tier','view-hire','view-contacts','view-review',
+               'view-redirecting','view-success'];
+  var map = { 1:'view-tier', 2:'view-hire', 3:'view-contacts', 4:'view-review' };
+  views.forEach(function(v) { document.getElementById(v).style.display = 'none'; });
+  document.getElementById(map[n] || 'view-tier').style.display = 'block';
+  setStep(n);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showView(id) {
+  ['view-tier','view-hire','view-contacts','view-review','view-redirecting','view-success']
+    .forEach(function(v) { document.getElementById(v).style.display = 'none'; });
+  document.getElementById(id).style.display = 'block';
+}
+
+function setStep(n, done) {
+  for (var i = 1; i <= 4; i++) {
+    var el = document.getElementById('step-' + i);
+    el.classList.remove('active','done');
+    if (i < n)       el.classList.add('done');
+    else if (i === n) el.classList.add(done ? 'done' : 'active');
+  }
+}
+
+// ── Validation ────────────────────────────────────────────────────────
+function val(id) { return (document.getElementById(id).value || '').trim(); }
+
+function markError(id, msg) {
+  var el = document.getElementById(id);
+  if (el) el.classList.add('error');
+  showError(msg);
+}
+
+function clearErrors() {
+  document.querySelectorAll('.error').forEach(function(el) {
+    el.classList.remove('error');
+  });
+}
+
+function validateAndGoToStep3() {
+  clearErrors();
+  var ok = true;
+  if (!val('new_hire_name')) { markError('new_hire_name', 'First name is required.'); ok = false; }
+  if (!val('role_name'))     { markError('role_name',     'Role is required.'); ok = false; }
+  if (!val('company_name'))  { markError('company_name',  'Company name is required.'); ok = false; }
+  if (ok) goToStep(3);
+}
+
+function validateAndGoToStep4() {
+  clearErrors();
+  var ok = true;
+  if (!val('manager_email'))  { markError('manager_email',  'Manager email is required.'); ok = false; }
+  if (!val('submitter_email')){ markError('submitter_email','Your email is required.'); ok = false; }
+  if (ok) { buildReview(); goToStep(4); }
+}
+
+// ── Color preview ─────────────────────────────────────────────────────
+function updateColorPreview() {
+  var raw = val('accent_color').replace(/^#/, '');
+  var valid = /^[0-9A-Fa-f]{6}$/.test(raw);
+  document.getElementById('color-preview').style.background = valid ? '#' + raw : '#2ec97e';
+}
+
+// ── Review builder ────────────────────────────────────────────────────
+function buildReview() {
+  var tierLabel = selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1);
+  document.getElementById('r-tier').textContent  = tierLabel;
+  document.getElementById('r-price').textContent = '$' + PRICES[selectedTier];
+  document.getElementById('r-total').textContent = '$' + PRICES[selectedTier];
+
+  var hireRows = [
+    ['Name',        val('new_hire_name')],
+    ['Role',        val('role_name')],
+    ['Company',     val('company_name')],
+    ['Department',  val('department_name')],
+    ['Tone',        val('onboarding_tone')],
+    ['Accent',      val('accent_color') || '2ec97e (default)'],
+    ['Logo URL',    val('logo_url')],
+  ];
+  document.getElementById('r-hire-body').innerHTML = hireRows
+    .filter(function(r) { return r[1]; })
+    .map(function(r) {
+      return '<div class="review-row"><span class="review-label">' + r[0] +
+             '</span><span class="review-val">' + r[1] + '</span></div>';
+    }).join('');
+
+  var contactRows = [
+    ['Manager email', val('manager_email')],
+    ['Manager name',  val('manager_name')],
+    ['Your email',    val('submitter_email')],
+    ['Buddy name',    val('onboarding_partner')],
+    ['Buddy email',   val('partner_email')],
+  ];
+  document.getElementById('r-contacts-body').innerHTML = contactRows
+    .filter(function(r) { return r[1]; })
+    .map(function(r) {
+      return '<div class="review-row"><span class="review-label">' + r[0] +
+             '</span><span class="review-val">' + r[1] + '</span></div>';
+    }).join('');
+}
+
+// ── Submit ────────────────────────────────────────────────────────────
+function submitOrder() {
+  var btn = document.getElementById('pay-btn');
+  btn.disabled = true;
+  btn.textContent = 'Preparing checkout\u2026';
+
+  var payload = {
+    plan_tier:          selectedTier,
+    new_hire_name:      val('new_hire_name'),
+    role_name:          val('role_name'),
+    company_name:       val('company_name'),
+    department_name:    val('department_name'),
+    onboarding_tone:    val('onboarding_tone'),
+    accent_color:       val('accent_color'),
+    logo_url:           val('logo_url'),
+    role_tasks:         val('role_tasks'),
+    tools_text:         val('tools_text'),
+    challenges_text:    val('challenges_text'),
+    onboarding_approach:val('onboarding_approach'),
+    success_signal:     val('success_signal'),
+    confidence_method:  val('confidence_method'),
+    growth_areas:       val('growth_areas'),
+    development_plan:   val('development_plan'),
+    manager_email:      val('manager_email'),
+    manager_name:       val('manager_name'),
+    manager_phone:      val('manager_phone'),
+    submitter_email:    val('submitter_email'),
+    onboarding_partner: val('onboarding_partner'),
+    partner_email:      val('partner_email'),
+    partner_phone:      val('partner_phone'),
+    success_url: window.location.origin + window.location.pathname +
+                 '?status=success&session_id={CHECKOUT_SESSION_ID}',
+    cancel_url:  window.location.origin + window.location.pathname,
+  };
+
+  fetch(CHECKOUT_URL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(payload),
+  })
+  .then(function(res) { return res.json().then(function(d) { return { ok: res.ok, data: d }; }); })
+  .then(function(r) {
+    if (!r.ok || !r.data.url) throw new Error(r.data.error || 'Checkout creation failed');
+    showView('view-redirecting');
+    setStep(4);
+    window.location.href = r.data.url;
+  })
+  .catch(function(err) {
+    btn.disabled = false;
+    btn.textContent = 'Confirm & Pay \u2192';
+    showError('Error: ' + err.message + '. Please try again.');
+  });
+}
+
+// ── Error helpers ─────────────────────────────────────────────────────
+function showError(msg) {
+  var el = document.getElementById('form-error');
+  el.style.display = 'block';
+  el.textContent = msg;
+}
+function hideError() {
+  var el = document.getElementById('form-error');
+  el.style.display = 'none';
+}
+</script>
