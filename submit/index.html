@@ -169,7 +169,9 @@ robots: noindex, nofollow
   color: #0d1f14;
   font-weight: 700;
 }
-.tier-card.selected .tier-selected-badge { display: flex; }
+.tier-card.selected .tier-selected-badge,
+.tier-card.selected-premium .tier-selected-badge,
+.tier-card.selected-ultimate .tier-selected-badge { display: flex; }
 
 /* ─── Form fields ────────────────────────────────────────── */
 .form-section {
@@ -255,22 +257,125 @@ robots: noindex, nofollow
   line-height: 1.5;
 }
 
-/* ─── Accent color preview ───────────────────────────────── */
-.color-row {
+/* ─── Accent color picker ────────────────────────────────── */
+.color-picker-wrap { display: flex; flex-direction: column; gap: 0.5rem; }
+.color-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.color-swatch {
+  width: 24px; height: 24px;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.12s, border-color 0.12s;
+  flex-shrink: 0;
+}
+.color-swatch:hover { transform: scale(1.15); }
+.color-swatch.active { border-color: var(--ink); }
+.color-input-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
-.color-preview {
-  width: 28px; height: 28px;
-  border-radius: 6px;
-  background: #2ec97e;
+.color-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--bg-2);
   border: 1px solid var(--border-h);
+  border-radius: 8px;
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.18s;
+  transition: border-color 0.15s;
+  user-select: none;
+}
+.color-trigger:hover { border-color: var(--green); }
+.color-trigger-swatch {
+  width: 18px; height: 18px;
+  border-radius: 4px;
+  display: inline-block;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.color-trigger-label {
+  font-size: 0.75rem;
+  color: var(--ink-2);
+  white-space: nowrap;
 }
 
-/* ─── Review card ────────────────────────────────────────── */
+/* ─── Tier prompt panel ──────────────────────────────────── */
+.tier-prompt {
+  display: none;
+  margin-top: 0.85rem;
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  font-size: 0.84rem;
+  line-height: 1.7;
+}
+.tier-prompt.prompt-premium {
+  background: rgba(90,160,255,0.07);
+  border: 1px solid rgba(90,160,255,0.2);
+  color: var(--ink-2);
+}
+.tier-prompt.prompt-ultimate {
+  background: var(--orange-sub);
+  border: 1px solid rgba(224,122,58,0.22);
+  color: var(--ink-2);
+}
+.tier-prompt strong { font-weight: 600; }
+.tier-prompt.prompt-premium strong { color: #5aa0ff; }
+.tier-prompt.prompt-ultimate strong { color: var(--orange); }
+.tier-prompt-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+.tier-prompt-switch {
+  font-size: 0.77rem;
+  font-weight: 500;
+  color: var(--ink-3);
+  background: none;
+  border: 1px solid var(--border-h);
+  border-radius: 7px;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: color 0.15s, border-color 0.15s;
+}
+.tier-prompt-switch:hover { color: var(--ink-2); border-color: var(--border-h); }
+
+/* ─── Upgrade banner ─────────────────────────────────────── */
+.upgrade-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 1.1rem;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+.upgrade-banner strong { color: var(--ink-2); font-weight: 600; }
+.upgrade-banner-btn {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--green);
+  background: var(--green-sub);
+  border: 1px solid var(--green-border);
+  border-radius: 6px;
+  padding: 0.25rem 0.65rem;
+  cursor: pointer;
+  font-family: var(--font-body);
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.upgrade-banner-btn:hover { opacity: 0.8; }
+
 .review-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -483,7 +588,25 @@ robots: noindex, nofollow
       </div>
 
     </div>
-    <button class="btn-primary" id="tier-next-btn" onclick="goToStep(2)" disabled>Continue →</button>
+
+    <!-- Tier prompt panels -->
+    <div class="tier-prompt prompt-premium" id="prompt-premium">
+      <strong>Premium includes a Leader Guide.</strong> This is a second PDF sent alongside the hire's roadmap, giving the hiring manager a structured checklist, readiness signals, and talking points for each milestone. If you just need the hire's document, Basic covers that.
+      <div class="tier-prompt-actions">
+        <button class="tier-prompt-switch" onclick="selectTier('basic')">Switch to Basic ($69)</button>
+        <button class="tier-prompt-switch" onclick="selectTier('ultimate')">Upgrade to Ultimate ($159)</button>
+      </div>
+    </div>
+
+    <div class="tier-prompt prompt-ultimate" id="prompt-ultimate">
+      <strong>Ultimate adds a growth and development track.</strong> On top of the hire roadmap and leader guide, you get a personalised development plan and growth area document built into the output. If you don't have a formal dev track for this role yet, Premium is the better fit.
+      <div class="tier-prompt-actions">
+        <button class="tier-prompt-switch" onclick="selectTier('basic')">Switch to Basic ($69)</button>
+        <button class="tier-prompt-switch" onclick="selectTier('premium')">Switch to Premium ($119)</button>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="tier-next-btn" onclick="goToStep(2)" disabled style="margin-top:1rem">Continue →</button>
   </div>
 
   <!-- ── STEP 2: HIRE DETAILS ── -->
@@ -529,12 +652,28 @@ robots: noindex, nofollow
           </div>
           <div class="field">
             <label>Brand accent colour <span class="opt">optional</span></label>
-            <div class="color-row">
-              <div class="color-preview" id="color-preview"></div>
-              <input type="text" id="accent_color" placeholder="2ec97e" maxlength="7"
-                     oninput="updateColorPreview()" style="font-family:monospace">
+            <div class="color-picker-wrap">
+              <div class="color-swatches" id="color-swatches">
+                <div class="color-swatch active" style="background:#2ec97e" data-hex="2ec97e" onclick="pickSwatch(this)" title="Sheety green"></div>
+                <div class="color-swatch" style="background:#5aa0ff" data-hex="5aa0ff" onclick="pickSwatch(this)" title="Blue"></div>
+                <div class="color-swatch" style="background:#e07a3a" data-hex="e07a3a" onclick="pickSwatch(this)" title="Orange"></div>
+                <div class="color-swatch" style="background:#a855f7" data-hex="a855f7" onclick="pickSwatch(this)" title="Purple"></div>
+                <div class="color-swatch" style="background:#ec4899" data-hex="ec4899" onclick="pickSwatch(this)" title="Pink"></div>
+                <div class="color-swatch" style="background:#f59e0b" data-hex="f59e0b" onclick="pickSwatch(this)" title="Amber"></div>
+                <div class="color-swatch" style="background:#ef4444" data-hex="ef4444" onclick="pickSwatch(this)" title="Red"></div>
+                <div class="color-swatch" style="background:#14b8a6" data-hex="14b8a6" onclick="pickSwatch(this)" title="Teal"></div>
+              </div>
+              <div class="color-input-row">
+                <label class="color-trigger" for="color-native" title="Open colour picker">
+                  <span class="color-trigger-swatch" id="color-trigger-swatch" style="background:#2ec97e"></span>
+                  <span class="color-trigger-label">Pick colour</span>
+                </label>
+                <input type="color" id="color-native" value="#2ec97e" oninput="onNativePick(this.value)" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none">
+                <input type="text" id="accent_color" placeholder="2ec97e" maxlength="7"
+                       oninput="onHexInput()" style="font-family:monospace;flex:1">
+              </div>
             </div>
-            <span class="hint">Hex code without #. Defaults to Sheety green.</span>
+            <span class="hint">Choose a swatch, use the colour picker, or enter a hex code. Defaults to Sheety green.</span>
           </div>
         </div>
         <div class="field">
@@ -568,10 +707,14 @@ robots: noindex, nofollow
     </div>
 
     <!-- Premium+ fields -->
-    <div class="form-section" id="section-premium" style="display:none">
+    <div class="form-section" id="section-premium">
       <div class="form-section-head">
         Leader context
         <span class="section-tier-badge badge-premium">Premium +</span>
+      </div>
+      <div class="upgrade-banner" id="upgrade-to-premium" style="display:none">
+        <span>Leader Guide included from <strong>Premium ($119)</strong></span>
+        <button class="upgrade-banner-btn" onclick="selectTier('premium')">Upgrade →</button>
       </div>
       <div class="form-body">
         <div class="field">
@@ -586,10 +729,14 @@ robots: noindex, nofollow
     </div>
 
     <!-- Ultimate-only fields -->
-    <div class="form-section" id="section-ultimate" style="display:none">
+    <div class="form-section" id="section-ultimate">
       <div class="form-section-head">
         Growth &amp; development
         <span class="section-tier-badge badge-ultimate">Ultimate</span>
+      </div>
+      <div class="upgrade-banner" id="upgrade-to-ultimate" style="display:none">
+        <span>Growth track included from <strong>Ultimate ($159)</strong></span>
+        <button class="upgrade-banner-btn" onclick="selectTier('ultimate')">Upgrade →</button>
       </div>
       <div class="form-body">
         <div class="field">
@@ -763,18 +910,40 @@ function selectTier(tier) {
   ['basic','premium','ultimate'].forEach(function(t) {
     var card = document.getElementById('card-' + t);
     card.classList.remove('selected','selected-premium','selected-ultimate');
+    // Force badge off directly (CSS may not win against specificity in 11ty builds)
+    var badge = card.querySelector('.tier-selected-badge');
+    if (badge) badge.style.display = 'none';
   });
   var card = document.getElementById('card-' + tier);
   if (tier === 'basic')    card.classList.add('selected');
   if (tier === 'premium')  card.classList.add('selected-premium');
   if (tier === 'ultimate') card.classList.add('selected-ultimate');
+  // Force badge on
+  var badge = card.querySelector('.tier-selected-badge');
+  if (badge) badge.style.display = 'flex';
   document.getElementById('tier-next-btn').disabled = false;
 
-  // Show/hide conditional sections
-  document.getElementById('section-premium').style.display =
-    (tier === 'premium' || tier === 'ultimate') ? 'block' : 'none';
-  document.getElementById('section-ultimate').style.display =
-    tier === 'ultimate' ? 'block' : 'none';
+  // Tier prompt panels
+  document.getElementById('prompt-premium').style.display  = tier === 'premium'  ? 'block' : 'none';
+  document.getElementById('prompt-ultimate').style.display = tier === 'ultimate' ? 'block' : 'none';
+
+  // Premium/Ultimate sections: always visible, but show upgrade banner on basic
+  document.getElementById('section-premium').style.display  = 'block';
+  document.getElementById('section-ultimate').style.display = 'block';
+  document.getElementById('upgrade-to-premium').style.display  = tier === 'basic'    ? 'flex' : 'none';
+  document.getElementById('upgrade-to-ultimate').style.display = (tier === 'basic' || tier === 'premium') ? 'flex' : 'none';
+  // Lock/unlock fields
+  setFieldsLocked('section-premium',  tier === 'basic');
+  setFieldsLocked('section-ultimate', tier !== 'ultimate');
+}
+
+function setFieldsLocked(sectionId, locked) {
+  var section = document.getElementById(sectionId);
+  if (!section) return;
+  section.querySelectorAll('input, textarea, select').forEach(function(el) {
+    el.disabled = locked;
+    el.style.opacity = locked ? '0.4' : '1';
+  });
 }
 
 // ── Navigation ────────────────────────────────────────────────────────
@@ -836,12 +1005,30 @@ function validateAndGoToStep4() {
   if (ok) { buildReview(); goToStep(4); }
 }
 
-// ── Color preview ─────────────────────────────────────────────────────
-function updateColorPreview() {
-  var raw = val('accent_color').replace(/^#/, '');
-  var valid = /^[0-9A-Fa-f]{6}$/.test(raw);
-  document.getElementById('color-preview').style.background = valid ? '#' + raw : '#2ec97e';
+// ── Color picker ──────────────────────────────────────────────────────
+function syncColorUI(hex) {
+  hex = hex.replace(/^#/, '');
+  document.getElementById('accent_color').value = hex;
+  document.getElementById('color-native').value = '#' + hex;
+  var swatch = document.getElementById('color-trigger-swatch');
+  if (swatch) swatch.style.background = '#' + hex;
+  document.querySelectorAll('.color-swatch').forEach(function(s) {
+    s.classList.toggle('active', s.dataset.hex === hex.toLowerCase());
+  });
 }
+function pickSwatch(el) { syncColorUI(el.dataset.hex); }
+function onNativePick(val) { syncColorUI(val); }
+function onHexInput() {
+  var raw = val('accent_color').replace(/^#/, '');
+  if (/^[0-9A-Fa-f]{6}$/.test(raw)) {
+    document.getElementById('color-native').value = '#' + raw;
+    document.querySelectorAll('.color-swatch').forEach(function(s) {
+      s.classList.toggle('active', s.dataset.hex === raw.toLowerCase());
+    });
+  }
+}
+// legacy alias called from init
+function updateColorPreview() { syncColorUI('2ec97e'); }
 
 // ── Review builder ────────────────────────────────────────────────────
 function buildReview() {
@@ -850,16 +1037,37 @@ function buildReview() {
   document.getElementById('r-price').textContent = '$' + PRICES[selectedTier];
   document.getElementById('r-total').textContent = '$' + PRICES[selectedTier];
 
+  var accentHex = val('accent_color') || '2ec97e';
+
   var hireRows = [
-    ['Name',        val('new_hire_name')],
-    ['Role',        val('role_name')],
-    ['Company',     val('company_name')],
-    ['Department',  val('department_name')],
-    ['Tone',        val('onboarding_tone')],
-    ['Accent',      val('accent_color') || '2ec97e (default)'],
-    ['Logo URL',    val('logo_url')],
+    ['Name',           val('new_hire_name')],
+    ['Role',           val('role_name')],
+    ['Company',        val('company_name')],
+    ['Department',     val('department_name')],
+    ['Tone',           val('onboarding_tone')],
+    ['Accent colour',  '#' + accentHex],
+    ['Logo URL',       val('logo_url')],
   ];
-  document.getElementById('r-hire-body').innerHTML = hireRows
+
+  var contextRows = [
+    ['Key responsibilities', val('role_tasks')],
+    ['Tools',               val('tools_text')],
+    ['Early challenges',    val('challenges_text')],
+    ['How you onboard',     val('onboarding_approach')],
+  ];
+
+  if (selectedTier === 'premium' || selectedTier === 'ultimate') {
+    contextRows.push(['What success looks like', val('success_signal')]);
+    contextRows.push(['Confirming readiness',    val('confidence_method')]);
+  }
+  if (selectedTier === 'ultimate') {
+    contextRows.push(['Growth areas',     val('growth_areas')]);
+    contextRows.push(['Development plan', val('development_plan')]);
+  }
+
+  var allHireRows = hireRows.concat(contextRows);
+
+  document.getElementById('r-hire-body').innerHTML = allHireRows
     .filter(function(r) { return r[1]; })
     .map(function(r) {
       return '<div class="review-row"><span class="review-label">' + r[0] +
@@ -869,9 +1077,11 @@ function buildReview() {
   var contactRows = [
     ['Manager email', val('manager_email')],
     ['Manager name',  val('manager_name')],
+    ['Manager phone', val('manager_phone')],
     ['Your email',    val('submitter_email')],
     ['Buddy name',    val('onboarding_partner')],
     ['Buddy email',   val('partner_email')],
+    ['Buddy phone',   val('partner_phone')],
   ];
   document.getElementById('r-contacts-body').innerHTML = contactRows
     .filter(function(r) { return r[1]; })
@@ -931,7 +1141,7 @@ function submitOrder() {
   .catch(function(err) {
     btn.disabled = false;
     btn.textContent = 'Confirm & Pay \u2192';
-    showError('Error: ' + err.message + '. Please try again.');
+    showError(err.message || 'Checkout failed. Please try again.');
   });
 }
 
