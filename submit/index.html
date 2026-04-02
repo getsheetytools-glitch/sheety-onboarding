@@ -315,6 +315,12 @@ robots: noindex, nofollow
   font-size: 0.84rem;
   line-height: 1.7;
 }
+.tier-prompt.prompt-basic {
+  background: var(--green-sub);
+  border: 1px solid var(--green-border);
+  color: var(--ink-2);
+}
+.tier-prompt.prompt-basic strong { color: var(--green); }
 .tier-prompt.prompt-premium {
   background: rgba(90,160,255,0.07);
   border: 1px solid rgba(90,160,255,0.2);
@@ -590,6 +596,13 @@ robots: noindex, nofollow
     </div>
 
     <!-- Tier prompt panels -->
+    <div class="tier-prompt prompt-basic" id="prompt-basic">
+      <strong>Basic gets you the hire's Onboarding Roadmap.</strong> No leader guide. If you're the hiring manager too, that's probably all you need. If someone else is managing this hire's first 90 days, consider Premium — it adds a structured guide for them with readiness signals and milestone talking points.
+      <div class="tier-prompt-actions">
+        <button class="tier-prompt-switch" onclick="selectTier('premium')">Upgrade to Premium ($119)</button>
+      </div>
+    </div>
+
     <div class="tier-prompt prompt-premium" id="prompt-premium">
       <strong>Premium includes a Leader Guide.</strong> This is a second PDF sent alongside the hire's roadmap, giving the hiring manager a structured checklist, readiness signals, and talking points for each milestone. If you just need the hire's document, Basic covers that.
       <div class="tier-prompt-actions">
@@ -924,6 +937,7 @@ function selectTier(tier) {
   document.getElementById('tier-next-btn').disabled = false;
 
   // Tier prompt panels
+  document.getElementById('prompt-basic').style.display    = tier === 'basic'    ? 'block' : 'none';
   document.getElementById('prompt-premium').style.display  = tier === 'premium'  ? 'block' : 'none';
   document.getElementById('prompt-ultimate').style.display = tier === 'ultimate' ? 'block' : 'none';
 
