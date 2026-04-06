@@ -5,11 +5,11 @@ module.exports = {
   parentUrl:   "https://sheety.tools",
   parentName:  "Sheety Tools",
 
-  // Waitlist CTA
-  waitlistUrl: "https://forms.gle/8ptuwNmgn8xt34sW7",
-  waitlistLabel: "Join the waitlist",
+  orderUrl:    "/submit/",
+  orderLabel:  "Order now",
+  bulkUrl:     "/bulk/",
+  bulkLabel:   "Bulk orders",
 
-  // Support
   kofi: "https://ko-fi.com/sheetytools",
 
   year: new Date().getFullYear(),
